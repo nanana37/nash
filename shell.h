@@ -10,6 +10,7 @@
 #include <fcntl.h>
 #include "job.h"
 #include "execute.h"
+#include "command_util.h"
 #include "debug.h"
 
 #define MAX_LINE 80 /* The maximum length command */
@@ -20,23 +21,10 @@
 
 #define MAX_CHLD MAX_ARGS
 
-
-typedef struct command_and_args {
-    char **cmd; // head of command line
-    int a_size; // how many args belong to the command
-    char **in;
-    char **out;
-    char **err;
-    struct command_and_args *next;
-} command_t;
-
 /* tokenize.c */
 void shell_handler();
 char *read_line();
 void tokenize_line(char **args, char *line);
-
-/* parse.c */
-void parse_args(char **args, command_t *command);
 
 /* prompt.c */
 void print_user(void);

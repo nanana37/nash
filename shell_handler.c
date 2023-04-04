@@ -9,9 +9,6 @@ void shell_handler()
     char *token;
     int i;
 
-    command_t *commands = malloc(sizeof(command_t));
-    commands->next = NULL;
-
     while (should_run) {
         printf("\n");
         print_user();
@@ -72,9 +69,14 @@ void shell_handler()
         //     //TODO
         // }
         else {
-            // parse_args(args, commands);
+            command_set_t *cmd_set = (command_set_t*)malloc(sizeof(command_set_t));
+            parse_args(args, cmd_set);
+            execve_search_path(get_command(cmd_set));
+
             // execute(args);
-            execve_search_path(args);
+            // execve_search_path(args);
+
+
         }
     }
 }
