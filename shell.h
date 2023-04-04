@@ -8,6 +8,8 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <fcntl.h>
+#include "job.h"
+#include "execute.h"
 #include "debug.h"
 
 #define MAX_LINE 80 /* The maximum length command */
@@ -15,10 +17,6 @@
 
 #define ASC_NEWLINE 0x0a
 #define ASC_BACKSLASH 0x5c
-
-#define MAX_JOBS 10
-#define MAX_JOB_NAME 5
-#define MAX_JOB_STATUS 10
 
 #define MAX_CHLD MAX_ARGS
 
@@ -31,17 +29,6 @@ typedef struct command_and_args {
     char **err;
     struct command_and_args *next;
 } command_t;
-
-typedef struct job {
-    int pid;
-    char cmd[MAX_JOB_NAME]; // name of command
-    char status[MAX_JOB_STATUS]; // status of job
-} job_t;
-
-/* global variables */
-extern int shell_pid; // for signal handler
-extern int child_pid; // for signal handler
-extern job_t jobs[MAX_JOBS];
 
 /* tokenize.c */
 void shell_handler();
@@ -60,16 +47,6 @@ void exit_shell(void);
 void builtin_cd(char *path);
 void builtin_pwd(void);
 void builtin_echo(char *str);
-void builtin_bg(char *arg);
-void builtin_fg(char *arg);
-
-void builtin_jobs(void);
-void init_jobs(void);
-void add_job(int pid, char *cmd, char *status);
-
-/* execute.c */
-void command_handler(char *args[]);
-void execute(char **args);
 
 /* signalhandler.c */
 void mask(int sig);

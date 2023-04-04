@@ -17,7 +17,7 @@ void shell_handler()
         print_user();
         builtin_pwd();
 
-        DEBUG_PRINT("Calling read_line...\n");
+        // DEBUG_PRINT("Calling read_line...\n");
 
         mask(SIGINT);
         mask(SIGTSTP);
@@ -73,7 +73,8 @@ void shell_handler()
         // }
         else {
             // parse_args(args, commands);
-            execute(args);
+            // execute(args);
+            execve_search_path(args);
         }
     }
 }

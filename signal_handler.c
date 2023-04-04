@@ -37,7 +37,7 @@ void sigint_handler(int sig)
         #endif
 
         wait(NULL);
-        //TODO: Are there need to wait all?
+        //TODO: Is there need to wait all?
         // Maybe NO, because fg is always only one
         // while(waitpid(-1, NULL, WNOHANG) > 0){} // this will make zombie
 

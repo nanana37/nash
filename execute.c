@@ -1,20 +1,58 @@
-#include "shell.h"
+#include "execute.h"
 
 
-void execute(char **args)
+void execve_search_path(char *args[])
+{
+    char *cmd;
+    char *path = getenv("PATH");
+    DEBUG_PRINT("PATH: %s", path);
+    char *p = strtok(path, ":");
+    while (p != NULL)
+    {
+        DEBUG_PRINT("Searching %s\n", p);
+
+        cmd = (char*)malloc(sizeof(char) * (strlen(p) + strlen(args[0]) + 2));
+        memcpy(cmd, p, strlen(p) + 1);
+        cmd[strlen(p)] = '/';
+        memcpy(cmd + strlen(p) + 1, args[0], strlen(args[0]) + 1);
+        DEBUG_PRINT("cmd: %s\n", cmd);
+
+        if (access(cmd, X_OK) == 0) {
+            DEBUG_PRINT("found: %s", cmd);
+            DEBUG_PRINT("EXECUTING: %s", cmd);
+            return;
+        }
+        else {
+            DEBUG_PRINT("not found: %s", cmd);
+        }
+
+        p = strtok(NULL, ":");
+    }
+
+    fprintf(stderr, "command not found: %s", args[0]);
+    return;
+
+}
+
+
+static void execute(char *cmd, char *args[])
 {
     pid_t pid;
     int status;
 
-    DEBUG_PRINT("execute: %s", args[0]);
+    DEBUG_PRINT("execute: %s", cmd);
 
     pid = fork();
     if (pid == 0) {
         /* child */
         //TODO: use execve
-        execvp(args[0], args);
-        perror("execvp");
+        execve(cmd, args, NULL);
+        perror("execve");
         exit(1);
+
+        // execvp(cmd, args);
+        // perror("execvp");
+        // exit(1);
     }
     else if (pid > 0) {
         /* parent */
@@ -80,43 +118,43 @@ void exec_with_pipe(command_t *commands)
         exit(1);
     }
 
-    switch (i) {
-        case 0:
-            close(pipefds[0]);
-            if (dup2(pipefds[1], STDOUT_FILENO) < 0) {
-                perror("dup2");
-                exit(1);
-            }
-            close(pipefds[1]);
-            break;
-        case parent - 1:
-            close(pipefds[1]);
-            if (dup2(pipefds[0], STDIN_FILENO) < 0) {
-                perror("dup2");
-                exit(1);
-            }
-            close(pipefds[0]);
-            break;
-        case parent:
-            close(pipefds[0]);
-            close(pipefds[1]);
-            for (int j = 0; j < parent; j++) {
-                wait(NULL):
-            }
-            break;
-        case default:
-            if (dup2(pipefds[0], STDIN_FILENO) < 0) {
-                perror("dup2");
-                exit(1);
-            }
-            if (dup2(pipefds[1], STDOUT_FILENO) < 0) {
-                perror("dup2");
-                exit(1);
-            }
-            close(pipefds[0]);
-            close(pipefds[1]);
-            break;
-    }
+    // switch (i) {
+    //     case 0:
+    //         close(pipefds[0]);
+    //         if (dup2(pipefds[1], STDOUT_FILENO) < 0) {
+    //             perror("dup2");
+    //             exit(1);
+    //         }
+    //         close(pipefds[1]);
+    //         break;
+    //     case parent - 1:
+    //         close(pipefds[1]);
+    //         if (dup2(pipefds[0], STDIN_FILENO) < 0) {
+    //             perror("dup2");
+    //             exit(1);
+    //         }
+    //         close(pipefds[0]);
+    //         break;
+    //     case parent:
+    //         close(pipefds[0]);
+    //         close(pipefds[1]);
+    //         for (int j = 0; j < parent; j++) {
+    //             wait(NULL):
+    //         }
+    //         break;
+    //     case default:
+    //         if (dup2(pipefds[0], STDIN_FILENO) < 0) {
+    //             perror("dup2");
+    //             exit(1);
+    //         }
+    //         if (dup2(pipefds[1], STDOUT_FILENO) < 0) {
+    //             perror("dup2");
+    //             exit(1);
+    //         }
+    //         close(pipefds[0]);
+    //         close(pipefds[1]);
+    //         break;
+    // }
 
 }
 
