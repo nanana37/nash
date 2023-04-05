@@ -70,13 +70,12 @@ void shell_handler()
         // }
         else {
             command_set_t *cmd_set = (command_set_t*)malloc(sizeof(command_set_t));
-            parse_args(args, cmd_set);
-            execve_search_path(get_command(cmd_set));
 
-            // execute(args);
-            // execve_search_path(args);
+            if (parse_args(args, cmd_set) > 0) {
+                execute_all_commands(cmd_set);
+            }
 
-
+            free_command_set(cmd_set);
         }
     }
 }

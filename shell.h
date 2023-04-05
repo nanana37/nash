@@ -8,9 +8,10 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <fcntl.h>
+#include "type.h"
 #include "job.h"
-#include "execute.h"
 #include "command_util.h"
+#include "execute.h"
 #include "debug.h"
 
 #define MAX_LINE 80 /* The maximum length command */
@@ -18,6 +19,7 @@
 
 #define ASC_NEWLINE 0x0a
 #define ASC_BACKSLASH 0x5c
+#define ASC_PIPE 0x7c
 
 #define MAX_CHLD MAX_ARGS
 

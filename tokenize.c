@@ -33,6 +33,10 @@ char *read_line()
             line_tmp[read - 2] = '\0';
             should_read = 2;
         }
+        else if (line_tmp[read - 2] == ASC_PIPE) {
+            strcat(line_tmp, " ");
+            should_read = 2;
+        }
         else {
             should_read = 0;
         }

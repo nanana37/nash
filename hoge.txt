@@ -1,0 +1,2 @@
+[Apr  5 2023] execute.c:50 # EXECUTING: /usr/bin/ls
+[Apr  5 2023] execute.c:212 # Initialize Standard I/O/E
