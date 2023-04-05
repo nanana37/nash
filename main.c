@@ -7,5 +7,6 @@ int main(int argc, char *argv[])
     shell_handler();
 
     exit_shell();
+
     return 0;
 }

@@ -4,7 +4,7 @@ SRCS = $(wildcard *.c)
 OBJS = $(SRCS:.c=.o)
 EXEC = nash
 
-all: $(OBJS)
+all: clean $(OBJS)
 	$(CC) $(CFLAGS) -o $(EXEC) $(OBJS)
 
 debug: CFLAGS += -g -DDEBUG
